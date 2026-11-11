@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'none'">
+  <title>CYBERFAE // Digital Garden</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #11192b;
+      color: #e4e3ce;
+      font-family: Consolas, monospace;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 4px;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    /* SIDE-BY-SIDE WORKSPACE */
+
+    .workspace {
+      display: grid;
+      grid-template-columns:
+        minmax(0, 3fr) minmax(320px, 2fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .panel {
+      min-width: 0;
+      background: #1d2940;
+      border: 3px solid #9476b1;
+      box-shadow: 7px 7px 0 #0b1020;
+      padding: 20px;
+    }
+
+    .panel h2 {
+      margin: 0 0 20px;
+      font-size: 19px;
+      letter-spacing: 2px;
+    }
+
+    /* LIVING GARDEN */
+
+    .garden-scene {
+      aspect-ratio: 6967 / 3921;
+      min-height: 0;
+      background: #11192b url("./assets/greenhouse.jpg") center / 100% 100% no-repeat;
+      border: 3px solid #79629a;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .plant-slot { position:absolute; width: 7%; aspect-ratio:1; transform:translate(-50%,-100%); pointer-events:none; }
+    /* Larger strawberry and beet plants */
+#plant-slot-0 {
+  width: 20%;
+}
+
+#plant-slot-3 {
+  width: 20%;
+}
+    .plant-slot img { width:100%; height:100%; object-fit:contain; image-rendering:pixelated; filter:drop-shadow(1px 3px 1px #142012aa); }
+    .plant-slot.grow img { animation: sprout .45s ease-out; }
+    @keyframes sprout { from { transform:scale(.75); opacity:.55; } to { transform:scale(1); opacity:1; } }
+    #progress {
+      font-size: 13px;
+      color: #e5f1d0;
+      margin: 0;
+      position:absolute; top:8px; left:10px; padding:5px 8px; background:#101627cc; border:1px solid #8baf9a;
+    }
+
+    .growth-meter { margin-top: 14px; padding: 13px 15px; background: #182b32; border: 2px solid #6d9d8d; }
+    .growth-header { display:flex; justify-content:space-between; gap:12px; font-size:13px; color:#e5f1d0; margin-bottom:10px; }
+    .growth-track { height:13px; background:#101627; border:1px solid #8baf9a; overflow:hidden; }
+    .growth-fill { height:100%; width:0%; background:linear-gradient(90deg,#69a878,#d5d78b); transition:width .35s ease-out; }
+    .growth-hint { font-size:12px; color:#c1d9c4; margin:9px 0 0; }
+    @media (prefers-reduced-motion: reduce) { .growth-fill { transition:none; } }
+
+    .garden-caption {
+      margin-top: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* DAILY INTENTIONS */
+
+    .task-entry {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      min-width: 0;
+      padding: 13px;
+      border: 2px solid #453365;
+      background: #e8e7dc;
+      color: #453365;
+      font: inherit;
+    }
+
+    button {
+      padding: 12px 14px;
+      border: 2px solid #453365;
+      background: #9cce9c;
+      color: #30264c;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #d9dc95;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+
+    #taskList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    #taskList li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px dashed #a5a0ac;
+      font-size: 13px;
+    }
+
+    #taskList li span {
+      overflow-wrap: anywhere;
+    }
+
+    #taskList button {
+      flex-shrink: 0;
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    .field-note {
+      margin-top: 24px;
+      padding: 16px;
+      background: #293e40;
+      border: 2px solid #6d9d8d;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 11px;
+      padding: 26px 0 8px;
+    }
+
+    .garden-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+    .garden-actions button { padding:9px 12px; font-size:12px; }
+    #resetGarden { background:#e9c5b5; }
+    [hidden] { display:none !important; }
+    /* GREENHOUSE MVP */
+    .garden-caption { color: #c1d9c4; }
+    .panel h2 { color: #efcf8c; }
+    #taskList li { color: #e6e4d8; }
+    #taskList li button { color: #30264c; }
+    h3 { color: #b9d8c0; }
+    /* SMALL WINDOW SUPPORT */
+
+    @media (max-width: 850px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        flex-wrap: wrap;
+      }
+
+      .garden-scene {
+        min-height: 0;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+
+    <header>
+      <h1>✿ CYBERFAE ✿</h1>
+      <div class="subtitle">
+        DIGITAL GARDEN OS // GROW YOUR WORLD
+      </div>
+    </header>
+
+    <div class="workspace">
+
+      <!-- LEFT: LIVING GARDEN -->
+
+      <section class="panel">
+        <h2>✿ THE LIVING GARDEN</h2>
+
+        <div class="garden-scene">
+          <div id="plantSlots" aria-label="Five growing plants"></div>
+
+          <p id="progress">
+            0 actions completed
+          </p>
+        </div>
+
+        <div class="growth-meter" aria-label="Current plant growth progress">
+          <div class="growth-header"><strong id="growthName">Strawberry growth</strong><span id="growthCount">0/3</span></div>
+          <div id="growthBar" class="growth-track" role="progressbar" aria-label="Current plant maturity" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0"><div id="growthFill" class="growth-fill"></div></div>
+          <p id="growthHint" class="growth-hint">Complete an intention to help your garden grow.</p>
+        </div>
+
+        <p class="garden-caption">
+          Every little action helps something grow.
+          Your garden is a reflection of your progress.
+        </p>
+      </section>
+
+      <!-- RIGHT: DAILY INTENTIONS -->
+
+      <section class="panel">
+        <h2>✿ DAILY INTENTIONS</h2>
+
+        <div class="task-entry">
+          <input
+            id="taskInput"
+            type="text"
+            placeholder="What will you cultivate today?"
+            maxlength="120"
+          >
+
+          <button id="addTask">
+            + PLANT INTENTION
+          </button>
+        </div>
+
+        <h3>YOUR QUESTS</h3>
+
+        <ul id="taskList"></ul>
+        <div class="garden-actions">
+          <button id="clearCompleted" type="button">CLEAR COMPLETED QUESTS</button>
+          <button id="resetGarden" type="button" hidden>START NEW GARDEN</button>
+        </div>
+
+        <div class="field-note">
+          ✿ FIELD NOTES<br>
+          Progress is cultivated through action.<br>
+          Rest is part of regeneration, too.
+        </div>
+      </section>
+
+    </div>
+
+    <footer>
+      CYBERFAE // DIGITAL FOLKLORE // v0.3
+    </footer>
+
+  </main>
+
+  <script src="./garden.js"></script>
+</body>
+</html>

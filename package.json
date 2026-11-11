@@ -1,0 +1,49 @@
+{
+  "name": "cyberfae-digital-garden",
+  "version": "0.3.0",
+  "description": "CYBERFAE offline digital garden and daily intentions",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --win portable",
+"dist:mac": "electron-builder --mac dmg --x64 --arm64"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron": "^45.1.0",
+    "electron-builder": "^26.0.0"
+  },
+  "productName": "CYBERFAE Digital Garden",
+  "build": {
+    "appId": "com.cyberfae.digitalgarden",
+    "productName": "CYBERFAE Digital Garden",
+    "files": [
+  "index.html",
+  "garden.js",
+  "fairy.js",
+  "main.js",
+  "assets/**/*",
+  "package.json"
+],
+    "directories": {
+      "output": "dist"
+    },
+"win": {
+  "icon": "build/CYBERFAE-icon.ico",
+  "target": ["portable"]
+},
+"mac": {
+  "target": [
+    {
+      "target": "dmg",
+      "arch": ["x64", "arm64"]
+    }
+  ],
+  "identity": null
+}
+  }
+}
